@@ -1289,7 +1289,7 @@ and sale, grouped by the year a holding period ends and the property type.
 
 ## I used the below to calculate the annualised returns
 
-![image.png](attachment:image.png)
+![calc.png](./images/calc.png)
 
 
 ```python
