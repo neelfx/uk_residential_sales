@@ -5,6 +5,8 @@
 # email neel@quarithm.com
 ```
 
+The functions in this notebook have been saved in the uk_res_sales.py file and can be called by importing them.
+
 
 ```python
 import numpy as np
@@ -579,9 +581,14 @@ full details of the largest transaction occurring within each county present in 
 
 ```python
 def max_exp_house_county(data):
+    '''
+    This function takes price paid data and returns another DataFrame containing the full details of the largest
+    transaction occuring within each county present in the data
+    
+    '''
+    
     
     #group by 'County' and for each County return row with max price (includes where more than one property has max value)
-    
     df = data.groupby(['County',], sort=True).apply(lambda df: df.loc[df['Price'] == df['Price'].copy().max()])
     return df
     #return data.groupby('County').apply(lambda df: df.loc[df['Price'].idxmax()])
@@ -944,6 +951,13 @@ each quarter (and these values).
 
 ```python
 def top5_dist_qtr_val(data):
+    '''
+    This function will take price paid data and return a DataFrame (index by quarter) giving the 
+    postcode districts(i.e AB1 2CD => AB1) with the largest total transation value for each quarter (and these values)
+    
+    '''
+    
+    
     # Convert date to datetime object and then create 'Quarter' column
     data['Date'] = pd.to_datetime(data['Date'])
     df = data[['Date','Postcode','Price']].copy()
@@ -963,36 +977,226 @@ def top5_dist_qtr_val(data):
     q2['Quarter'] = 2
     q3['Quarter'] = 3
     q4['Quarter'] = 4
-    
+
     # Concetenate the quaters and sort by Quarter and Price
     result_df = pd.concat([q1,q2,q3,q4])
-
-    return pd.pivot_table(result_df,index=["Quarter", "Postcode"], values='Price').sort_values(['Quarter','Price'], ascending=[1,0])
+    result_df = result_df.set_index('Quarter').sort_values(['Quarter', 'Price'], ascending=[1,0])
+    #return pd.pivot_table(result_df,index=['Quarter', 'Postcode' ], values='Price').sort_values('Price', ascending=[1,0])
+    return result_df
 ```
 
 
 ```python
-print(top5_dist_qtr_val(combined_df))
+top5_dist_qtr_val(combined_df)
 ```
 
-                        Price
-    Quarter Postcode         
-    1       KT22      5610000
-            HP5       4400000
-            W11       4250000
-            CM14      4237500
-    2       DN10      6107000
-            YO1       5750000
-            UB10      5135000
-            SO50      5000000
-    3       W14       5150000
-            W8        4675000
-            SW1X      4500000
-            NW11      3576400
-    4       W8        6000000
-            GU24      5650000
-            SW7       5550000
-    
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Postcode</th>
+      <th>Price</th>
+    </tr>
+    <tr>
+      <th>Quarter</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>KT22</td>
+      <td>5610000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>KT22</td>
+      <td>5610000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>HP5</td>
+      <td>4400000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>W11</td>
+      <td>4250000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>CM14</td>
+      <td>4237500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>DN10</td>
+      <td>6107000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>DN10</td>
+      <td>6107000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>YO1</td>
+      <td>5750000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>UB10</td>
+      <td>5135000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>SO50</td>
+      <td>5000000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>W14</td>
+      <td>5150000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>W8</td>
+      <td>5100000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>SW1X</td>
+      <td>4500000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>W8</td>
+      <td>4250000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NW11</td>
+      <td>3576400</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>W8</td>
+      <td>7000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>GU24</td>
+      <td>5650000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>NaN</td>
+      <td>5550000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>SW7</td>
+      <td>5550000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>W8</td>
+      <td>5000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+# Looking up the postcode with NaN value.
+combined_df.loc[(combined_df['Postcode'].isna() == True) & (combined_df['Price'] == 5550000)]
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Transaction_id</th>
+      <th>Price</th>
+      <th>Date</th>
+      <th>Postcode</th>
+      <th>Type</th>
+      <th>is_new</th>
+      <th>Duration</th>
+      <th>PAON</th>
+      <th>SAON</th>
+      <th>Street</th>
+      <th>Locality</th>
+      <th>Town_City</th>
+      <th>District</th>
+      <th>County</th>
+      <th>Price_Paid_Cat</th>
+      <th>Record_Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1057267</th>
+      <td>{27BB3E11-B8BC-4097-A4D6-92B0C53FEA60}</td>
+      <td>5550000</td>
+      <td>1996-11-01</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>N</td>
+      <td>F</td>
+      <td>35</td>
+      <td>NaN</td>
+      <td>ROLAND GARDENS</td>
+      <td>LONDON</td>
+      <td>LONDON</td>
+      <td>KENSINGTON AND CHELSEA</td>
+      <td>GREATER LONDON</td>
+      <td>A</td>
+      <td>A</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 # Transaction value concentration
 
@@ -1004,10 +1208,18 @@ for each year.
 
 
 ```python
-# default percentage is 80, but this can be changed by adding an additional parameter for it.
+
 
 def transaction_val_conc(data, perc=80):
-
+    '''
+    This function will take price paid data and return a dataframe, indexed by year and with one column for each property 
+    type, giving the percentage of transactions (in descending order of size) that account for 80% of the total 
+    transaction value occurring for that property type for each year.
+    
+    default percentage is 80, but this can be changed by adding an additional 'perc' parameter i.e perc= 70.
+    
+    '''
+    
     data['Date'] = pd.to_datetime(data['Date'])
     temp = data.copy()
     temp['Year'] = pd.to_numeric(temp['Date'].dt.year)
@@ -1158,7 +1370,25 @@ with columns for % change in transaction volume & % change in median price.
 
 ```python
 def compare_vol_median(first, second):
+    '''
+    This function will take two subsets of price paid data and returns a DataFrame showing the percentage change in the number of transactions and their median price between the two datasets, broken down by each of the following price brackets:
+
+● £0 < x <= 250,000
+
+● £250,000 < x <= £500,000
+
+● £500,000 < x <= £750,000
+
+● £750,000 < x <= £1,000,000
+
+● £1,000,000 < x <= £2,000,000
+
+● £2,000,000 < x <= £5,000,000
+
+● £5,000,000+
     
+    '''
+        
     #index containing tuples of ranges
     ranges = [(0,250000),
              (250000, 500000),
@@ -1296,6 +1526,12 @@ and sale, grouped by the year a holding period ends and the property type.
 # columns=['address', 'holding_periods', 'appearances', 'year', 'annualised_return']
 
 def avg_annualised_return(input_df, output_log=False):
+    '''
+    This function takes price paid data and returns the
+    average length of a holding period and the annualised change in value between the purchase
+    and sale, grouped by the year a holding period ends and the property type.
+    ''' 
+    
     from dateutil import relativedelta
     # Creating a separate field for that combined the house number, flat number 
     # and postcode to ensure multiple properties with the same postcode are treated as separate.
