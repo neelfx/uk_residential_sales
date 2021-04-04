@@ -946,7 +946,7 @@ result_df.info()
 
 Implement a function that will take price paid data and return a DataFrame (indexed by quarter)
 giving the 5 postcode districts (i.e. AB1 2CD => AB1) with the largest total transaction value for
-each quarter (and these values).
+each quarter (and these values). This function needs to be improved upon so that the index is not repeated, possibly using a different groupby method.
 
 
 ```python
@@ -1946,6 +1946,8 @@ r
 </div>
 
 
+
+The above function works, but it is extremely slow on large datasets, I need to look to see if there is a more efficient way of reaching the same outcome.
 
 
 ```python
